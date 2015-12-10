@@ -1,0 +1,51 @@
+ls
+ls -a
+touch .emacs
+ls
+cd tmp
+ls
+gcc -o udp1 udp1.c
+ls
+ls
+cd git
+ls
+ssh sq@192.168.1.101
+ls
+ssh sq@192.168.1.101
+ls
+cd workspace/
+ls
+cd carX
+ls
+cd ..
+ls
+cd carX
+ls
+ls
+ls
+ssh sq@192.168.1.101
+ssh sq@192.168.1.101
+ls
+cat .emacs.d/
+cat .emacs
+ls
+ls
+cd ..
+ls
+cd ringbuf/
+ls
+make
+ls
+ls
+cd ..
+ls
+make
+make
+make
+ls
+make
+ls
+scrapy
+ls
+scp
+scp -r hiker@192.168.10.126:./.emacs.d .
