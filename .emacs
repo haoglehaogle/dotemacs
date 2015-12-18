@@ -1,12 +1,9 @@
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'load-path "/home/hiker/.emacs.d/lisp/")
 (require 'tabbar)
-;(require 'one-key)
+(setq inhibit-startup-message t)
+					;(require 'one-key)
 (tabbar-mode 1)
 (global-linum-mode 1)
-
-(setq ring-bell-function 'ignore)
-(autoload 'dirtree "dirtree" "Add directory to tree view" t)
-
 (when (>= emacs-major-version 24)
   (require 'package)
   (add-to-list
@@ -15,7 +12,8 @@
    t)
   (package-initialize))
 
-
+(autoload 'dirtree "dirtree" "add dirctory to tree view" t)
+(set-face-attribute 'default nil :height 110)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -44,7 +42,7 @@
 (global-set-key (kbd "C-f") 'find-file);
 (put 'upcase-region 'disabled nil)
 (global-set-key (kbd "C-p") 'speedbar)
-(global-set-key (kbd "C-<tab>") 'next-buffer)
+
 
 
 (defun xah-open-file-at-cursor ()
@@ -104,14 +102,15 @@ URL `http://ergoemacs.org/emacs/emacs_open_file_path_fast.html'"
 
 
 (global-set-key "\C-xm" (lambda ()
-                              (interactive)
-                              (mouse-buffer-menu my-dummy-event)))
+			  (interactive)
+			  (mouse-buffer-menu my-dummy-event)))
 
 
 (global-set-key (kbd "C-x <up>") 'windmove-up)
 (global-set-key (kbd "C-x <down>") 'windmove-down)
 (global-set-key (kbd "C-x <right>") 'windmove-right)
 (global-set-key (kbd "C-x <left>") 'windmove-left)
+(global-set-key (kbd "C-<tab>") 'next-buffer)
 
 (defun xah-search-current-word ()
   "Call `isearch' on current word or text selection.
@@ -125,10 +124,10 @@ Version 2015-04-09"
           (setq ξp1 (region-beginning))
           (setq ξp2 (region-end)))
       (save-excursion
-        (skip-chars-backward "A-Za-z0-9")
+        (skip-chars-backward "-_A-Za-z0-9")
         (setq ξp1 (point))
         (right-char)
-        (skip-chars-forward "A-Za-z0-9")
+        (skip-chars-forward "_-A-Za-z0-9")
         (setq ξp2 (point))))
     (setq mark-active nil)
     (when (< ξp1 (point))
@@ -166,15 +165,37 @@ occurence of CHAR."
   "highlight the word under cursor"
   (interactive)
   (let (head-point tail-point word)
-    (skip-chars-forward "A-Za-z0-9")
+    (skip-chars-forward "_-A-Za-z0-9")
     (setq tail-point (point))
-    (skip-chars-backward "A-Za-z0-9")
+    (skip-chars-backward "_-A-Za-z0-9")
     (setq head-point (point))
     (setq word (buffer-substring-no-properties head-point tail-point))
     (setq isearch-string word)
     (isearch-search-and-update)))
 
-;(add-hook 'isearch-mode-hook 'highlight-current-word)
+(add-hook 'isearch-mode-hook 'highlight-current-word)
+(global-set-key [f3] 'highlight-current-word)
 
 
-;(global-set-key [f3] 'highlight-current-word)
+(define-globalized-minor-mode 
+  global-text-scale-mode
+  text-scale-mode
+  (lambda () (text-scale-mode 1)))
+
+(defun global-text-scale-adjust (inc) (interactive)
+       (text-scale-set 1)
+       (kill-local-variable 'text-scale-mode-amount)
+       (setq-default text-scale-mode-amount (+ text-scale-mode-amount inc))
+       (global-text-scale-mode 1)
+       )
+
+(global-set-key (kbd "M-0")
+		'(lambda () (interactive)
+		   (global-text-scale-adjust (- text-scale-mode-amount))
+		   (global-text-scale-mode -1)))
+(global-set-key (kbd "M-=")
+		'(lambda () (interactive) (global-text-scale-adjust 1)))
+(global-set-key (kbd "M--")
+		'(lambda () (interactive) (global-text-scale-adjust -1)))
+
+(global-text-scale-adjust -2)
